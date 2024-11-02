@@ -1,7 +1,7 @@
 def call(String project, String imageTag) {
     withCredentials([usernamePassword(credentialsId: "HubDocker", 
-                                     passwordVariable: "HubDockerPass", 
-                                     usernameVariable: "HubDockerUser")]) {
+                                     passwordVariable: "env.HubDockerPass", 
+                                     usernameVariable: "env.HubDockerUser")]) {
         // Log in to Docker Hub
         sh "echo ${env.HubDockerPass} | docker login -u ${env.HubDockerUser} --password-stdin"
         
