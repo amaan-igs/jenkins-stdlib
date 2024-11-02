@@ -5,6 +5,8 @@ def call(String project, String imageTag, String dockerUser) {
         // Log in to Docker Hub
         sh "echo ${env.HubDockerPass} | docker login -u ${dockerUser} --password-stdin"
         
+        echo "Docker username is: ${HubDockerUser}"
+        
         // Tag the image with Docker Hub repository
         sh "docker image tag ${project}:${imageTag} ${dockerUser}/${project}:${imageTag}"
         
