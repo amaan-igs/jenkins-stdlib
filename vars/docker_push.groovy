@@ -1,19 +1,16 @@
-def call(String project, String imageTag, String dockerHubUser) {
-    withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'dockerHubPass', usernameVariable: 'dockerHubUser')]) {
-        // Print out variables for debugging
-        echo "Docker Hub User: ${dockerHubUser}"
-        echo "Docker Hub Project: ${project}"
-        echo "Image Tag: ${imageTag}"
-
+def call(String project, String imageTag) {
+    withCredentials([usernamePassword(credentialsId: "HubDocker", 
+                                     passwordVariable: "HubDockerPass", 
+                                     usernameVariable: "HubDockerUser")]) {
         // Log in to Docker Hub
-        sh "echo ${dockerHubPass} | docker login -u ${dockerHubUser} --password-stdin"
-
-        // Tag the image with Docker Hub repo
-        sh "docker tag ${project}:${imageTag} ${dockerHubUser}/${project}:${imageTag}"
-
-        // Push the tagged image to Docker Hub repo
-        sh "docker push ${dockerHubUser}/${project}:${imageTag}"
-
+        sh "echo ${env.HubDockerPass} | docker login -u ${env.HubDockerUser} --password-stdin"
+        
+        // Tag the image with Docker Hub repository
+        sh "docker image tag ${project}:${imageTag} ${env.HubDockerUser}/${project}:${imageTag}"
+        
+        // Push the tagged image to Docker Hub
+        sh "docker push ${env.HubDockerUser}/${project}:${imageTag}"
+        
         // Log out after pushing
         sh "docker logout"
     }
